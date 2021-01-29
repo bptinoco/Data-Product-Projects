@@ -1,0 +1,30 @@
+---
+title: "First Project for Data Products"
+author: "Brendan P Tinoco"
+date: "1/28/2021"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+``` {r, echo=FALSE}
+library(leaflet) 
+```
+
+## My Map
+
+``` {r, echo=FALSE}
+
+my.icon <- makeIcon(iconUrl = "https://upload.wikimedia.org/wikipedia/commons/5/51/LSE_Logo.svg",
+                    iconWidth = 50,
+                    iconHeight = 50)
+
+lse.loc <- leaflet() %>%
+    addTiles() %>%
+    addMarkers(lat = 51.51449141682555, lng = -0.11648884497102528,
+               icon = my.icon, popup = "Some place with cool memories :)")
+
+lse.loc
+```
