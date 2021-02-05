@@ -1,0 +1,33 @@
+---
+title: "Second Project"
+author: "Brendan P Tinoco"
+date: "2/4/2021"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(plotly)
+set.seed(661)
+```
+
+## My Plotly Plot
+
+``` {r plot, echo=FALSE}
+x <- floor(rnorm(50, 30, 10) + runif(50, -10, 5))
+    y <- ceiling(x*2 + runif(50, -5, 15))
+        z <- c(rep("On a sitcom", 25), rep("Not on a sitcom", 25))
+        z <- factor(z, levels = c("On a sitcom", "Not on a sitcom"))
+
+datathing <- data.frame(Age = x, Cool = y,
+                        sitcom = z)
+
+colors = c("purple", "black")
+
+plot_ly(datathing, x = ~Age, 
+        y = ~Cool, color = ~sitcom,
+        colors = colors,
+        mode="markers",
+        type = "scatter")
+
+```
