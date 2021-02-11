@@ -1,0 +1,75 @@
+---
+title: "Final Project Pitch"
+author: "Brendan P Tinoco"
+date: "2/10/2021"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Are you tired of making graphs for every F1 driver manually?
+``` {r F1 data, echo=FALSE, include=FALSE} 
+require(dplyr)
+
+## load and join the data
+    wd <- "C:/Users/bptin/Dropbox/JHU_certification/DataProducts/FinalProject/FinalProject"
+    x <- read.csv(paste0(wd, "/drivers.csv"))
+    r <- read.csv(paste0(wd,"/results.csv"))
+    y <- read.csv(paste0(wd,"/races.csv"))
+    
+    temp <- full_join(x, r, by = "driverId")
+    f1 <- full_join(temp, y, by = "raceId")
+    rm(temp)
+
+## make sure we only have the variables we need
+    f1 <- f1[,c(1, 4:6, 8, 10:12, 14:15, 26, 27)]
+        f1$fullName <- paste(f1$forename, f1$surname, sep = " ")
+            
+## now cut out all drivers who did not race in the 2020 season
+    drivers2020 <- unique(f1[f1$year==2020, 1])
+        f1 <- f1[f1$driverId %in% drivers2020,]
+        
+## clean some of the names
+    f1$fullName[f1$forename=="Kimi"] <- "Kimi Raikkonen"
+    f1$fullName[f1$forename=="Nico"] <- "Nico Hulkenberg"
+    f1$fullName[f1$forename=="Sergio"] <- "Sergio Perez"
+        f1 <- f1[,-c(3,4)]
+
+## transform our position and grid variables into integer
+    f1$position <- as.integer(f1$position)
+    f1$grid[f1$grid==0] <- NA
+```
+
+``` {r plot1} 
+hist(f1$position[f1$driverId==1], main = "Lewis Hamilton Career Formula One Finishes",
+     xlab = "Finishing Position", breaks = 0:22)
+```
+
+## Look no further!
+
+This application will allow you to:
+
+- See EVERY career finish and start for each F1 driver in 2 convenient charts
+- Visualize the relationship between each driver's start and finish
+- No need to search for and clean the data yourself, it's already loaded in!
+
+## Ditch the regression summaries...
+
+```{r data merge, echo=FALSE}
+    `Charles Leclerc` <- data.frame(Start = f1$grid[f1$fullName=="Charles Leclerc"],
+                       Finish = f1$position[f1$fullName=="Charles Leclerc"])
+    fit <- lm(`Charles Leclerc`)
+```
+
+``` {r regression, echo=TRUE}
+    summary(fit)
+```
+
+## And stick to nice graphs at a click of a button!
+``` {r graph}
+plot(`Charles Leclerc`, main = "Charles Leclerc Starts and Finishes",
+             col = "black", pch = 25, bg = "pink", lwd = 1.75)
+abline(fit, lwd = 2, col = "navy")
+```
